@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+  <head>
+<style>
+body
+{
+text-align: center;
+}
+#add{
+padding:10px;
+width:200px;
+}
+.box
+{
+margin:1 auto; 
+width:30px
+padding:20px;
+background:rgb(232, 232, 232);
+border:2px solid #333;
+margin-right: 200px;
+margin-top: 50px;
+margin-left: 200px;
+
+}
+#searchbar{
+     margin-left: 15%;
+     padding:15px;
+     border-radius: 10px;
+     text-align: left;
+     width:400px;
+    
+   }
+   #search{
+   padding: 5px;
+   width: 100px;
+
+   }
+</style>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+
+    <title>Mini project Backend ST-2</title>
+
+   
+  </head>
+ <body >
+<div class="box"> 
+
+
+   <center> 
+<h2> Detail Form </h2>
+<hr   style="margin: 0 15%;"><br>
+<form >
+        <fieldset>
+      <div class="container my-4">
+
+            <table>
+            <tr>
+            <div class="mb-3">
+               
+            <td>Name: </td> 
+            <td> <input type="text" class="form-control" id="Name" required minlength="3"> </td><br>
+            
+            </div>
+            </tr>
+            <tr>
+            <div class="mb-3">
+               
+                <td> Mob No. </td>
+                <td><input type="number" class="form-control" id="number" pattern="[0-9]{10}" required maxlength="10"></td>
+              </div>
+            </tr>
+
+                 <tr>
+              <div class="mb-3">
+                <td>Email ID:</td>
+               <td> <input type="email" class="form-control" id="email" required >
+             </td> 
+            
+         </div>
+        </tr>
+    </table><br><br>
+            <button type="submit" style="background-color:orange" id="add">SUBMIT</button><br><br>
+<hr   style="margin: 0 1%;"><br><br>
+<input id="searchbar"  type="text"
+name="search" placeholder="Enter name here .." >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button onclick=search_animal()" id="search">Search</button>
+           
+</fieldset>
+</form></center>
+          <div id="items" class="my-4">
+            
+            <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Mob. no:</th>
+                    <th scope="col">Email Id</th>
+                    <th scope="col"> </th>
+                  </tr>
+                </thead>
+                <tbody id="tablebody">
+                  <tr>
+                    <th scope="row">Aishwarya</th>
+                    <td>999999999</td>
+                    <td>Aishwarya@gmail.com</td>
+                    
+                    <td><button style="background-color:yellow"> Delete</button></td>
+                  </tr>
+                </tbody>
+              </table>
+          </div>
+      </div>
+    
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+</div>
+  </body>
+
+  <script>
+    var x=document.getElementById("Name").value;
+    var y=document.getElementById("number").value;
+    var z=document.getElementById("email").value;
+    if(x&&y&&z==null)
+    {
+      alert("Empty form cannot be submitted");
+    }
+    function getAndupdate(){
+      nm=document.getElementById("Name").value;
+      num=document.getElementById("number").value;
+      em=document.getElementById("email").value;
+      if(localStorage.getItem('itemsJSON')==null)
+      {
+        array =[];
+        array.push([nm,num,em]);
+        localStorage.setItem('itemsJSON',JSON.stringify(array));
+      }
+      else{
+        arraystr = localStorage.getItem('itemsJSON');
+        array = JSON.parse(arraystr);
+        array.push([nm,num,em]);
+        localStorage.setItem('itemsJSON',JSON.stringify(array));
+      }
+      update();
+    };
+    
+    function update(){
+      if(localStorage.getItem('itemsJSON')==null)
+      {
+        array =[];
+        localStorage.setItem('itemsJSON',JSON.stringify(array));
+      }
+      else{
+        arraystr = localStorage.getItem('itemsJSON');
+        array = JSON.parse(arraystr);
+        }
+    let str="";
+    let tablebody=document.getElementById("tablebody");
+    array.forEach((element,index) => {
+      str += `
+      <tr>
+                    <th scope="row">${element[0]}</th>
+                    <td>${element[1]}</td>
+                    <td>${element[2]}</td>
+                    <td><button class="btn btn-sm btn-primary" onclick="del(${index})"> Delete</button></td>
+                  </tr> `;
+    });
+    
+    tablebody.innerHTML=str;
+  };
+    add=document.getElementById("add");
+    add.addEventListener("click",getAndupdate);
+    update();
+    function del(itemIndex)
+    {
+       arraystr=localStorage.getItem('itemsJSON');
+      array = JSON.parse(arraystr);
+      array.splice(itemIndex,1);
+      localStorage.setItem('itemsJSON',JSON.stringify(array));
+      update();
+    }
+    function search_animal() {
+    let input = document.getElementById('searchbar').value
+    input=input.toLowerCase();
+    let x = document.getElementsByClassName('form-control');
+      
+    for (i = 0; i < x.length; i++) { 
+        if (!x[i].innerHTML.toLowerCase().includes(input)) {
+            x[i].style.display="none";
+        }
+        else {
+            x[i].style.display="list-item";                 
+        }
+    }
+}
+
+  </script>
+</html>
